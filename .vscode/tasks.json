@@ -2,6 +2,13 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "🌐 Uruchom serwer BEYOND",
+      "type": "shell",
+      "command": "php -S localhost:8000",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
       "label": "🚀 Push do GitHub",
       "type": "shell",
       "command": "git add -A && git commit -m 'Aktualizacja z Antigravity' && git push origin main",

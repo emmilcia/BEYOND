@@ -1,38 +1,37 @@
 /* ==========================================================================
    BEYOND — Space & Astronomy Portal Stylesheet
-   Styl: Futurystyczny dashboard astronomiczny, ciemny motyw, akcenty kosmiczne
+   Design: Modern Sci-Fi Deep Space Dashboard (Glassmorphism & Neon Glow)
    ========================================================================== */
 
 :root {
-    /* Paleta kolorów kosmosu */
-    --bg-main: #07090e;
-    --bg-surface: rgba(16, 21, 38, 0.7);
-    --bg-surface-hover: rgba(22, 29, 52, 0.85);
-    --border-color: rgba(99, 133, 194, 0.18);
-    --border-glow: rgba(0, 229, 255, 0.35);
+    /* Paleta barw kosmosu i szklanych paneli */
+    --bg-base: #05070f;
+    --card-bg: rgba(11, 13, 27, 0.72);
+    --card-bg-hover: rgba(16, 19, 38, 0.85);
+    --card-border: rgba(105, 115, 175, 0.22);
+    --card-border-glow: rgba(0, 229, 255, 0.45);
 
-    /* Akcenty świetlne */
-    --accent-cyan: #00e5ff;
-    --accent-purple: #9d4edd;
-    --accent-orange: #ff7b00;
-    --accent-blue: #3a86ff;
+    /* Akcenty neonowe */
+    --neon-blue: #3a86ff;
+    --neon-cyan: #00f0ff;
+    --neon-orange: #ff7b00;
+    --neon-purple: #9d4edd;
+    --neon-yellow: #ffb703;
+    --neon-red: #ff3366;
 
-    /* Typografia i teksty */
+    /* Typografia */
     --font-heading: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --text-primary: #f0f4fc;
-    --text-secondary: #9aa8c7;
-    --text-muted: #627299;
+    --text-white: #f5f7fc;
+    --text-secondary: #9db0d4;
+    --text-muted: #5f7096;
 
-    /* Promienie zaokrągleń i cienie */
-    --radius-sm: 8px;
-    --radius-md: 14px;
-    --radius-lg: 20px;
-    --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 25px rgba(0, 229, 255, 0.15);
+    /* Cienie i zaokrąglenia */
+    --radius-card: 14px;
+    --radius-inner: 8px;
+    --shadow-glass: 0 12px 35px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Reset i ustawienia podstawowe */
 * {
     margin: 0;
     padding: 0;
@@ -44,60 +43,84 @@ html {
 }
 
 body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+    background-color: var(--bg-base);
+    color: var(--text-white);
     font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
     position: relative;
+    /* Prawdziwe tło kosmiczne z mgławicami i gwiazdami */
+    background-image: 
+        radial-gradient(circle at 88% 85%, rgba(255, 90, 20, 0.24) 0%, transparent 45%),
+        radial-gradient(circle at 12% 15%, rgba(58, 134, 255, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(10, 13, 28, 0.65) 0%, rgba(5, 7, 15, 0.92) 100%),
+        url('../images/space-bg.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
-/* Tło z subtelną kosmiczną poświatą */
+/* Subtelny overlay migoczących gwiazd */
 .stars-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        radial-gradient(circle at 15% 20%, rgba(58, 134, 255, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 30%, rgba(157, 78, 221, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(255, 123, 0, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at bottom, #090e1f 0%, #07090e 100%);
+    background-image: 
+        radial-gradient(1px 1px at 25px 35px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 120px 80px, #a5c7ff, transparent),
+        radial-gradient(1px 1px at 280px 190px, #ffdeaa, transparent),
+        radial-gradient(1.5px 1.5px at 450px 320px, #fff, transparent),
+        radial-gradient(2px 2px at 680px 120px, #7cf0ff, transparent),
+        radial-gradient(1px 1px at 850px 420px, #fff, transparent),
+        radial-gradient(2px 2px at 980px 240px, #ff9e42, transparent),
+        radial-gradient(1px 1px at 1150px 90px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 1350px 380px, #a5c7ff, transparent),
+        radial-gradient(1px 1px at 1500px 200px, #fff, transparent);
+    background-size: 600px 600px;
+    opacity: 0.75;
     z-index: -1;
     pointer-events: none;
+    animation: starsPulse 12s ease-in-out infinite alternate;
 }
 
-/* Kontener pomocniczy */
+@keyframes starsPulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 0.85; }
+    100% { opacity: 0.6; }
+}
+
+/* Kontener */
 .container {
     width: 100%;
-    max-width: 1240px;
+    max-width: 1440px;
     margin: 0 auto;
     padding: 0 24px;
 }
 
 /* ==========================================================================
-   Nawigacja (Header & Navbar)
+   Nawigacja
    ========================================================================== */
 .navbar-wrapper {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(7, 9, 14, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border-color);
+    background: rgba(8, 10, 22, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
 }
 
 .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 76px;
+    height: 70px;
 }
 
 .brand-logo {
@@ -105,65 +128,64 @@ body {
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    color: var(--text-primary);
+    color: var(--text-white);
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 1.45rem;
+    font-size: 1.4rem;
     letter-spacing: 2px;
 }
 
 .logo-icon {
-    font-size: 1.6rem;
-    filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.5));
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.6));
 }
 
 .logo-badge {
     font-size: 0.65rem;
     letter-spacing: 1.5px;
-    padding: 3px 7px;
+    padding: 3px 8px;
     border-radius: 4px;
-    background: rgba(0, 229, 255, 0.12);
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    color: var(--accent-cyan);
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    color: var(--neon-cyan);
     font-weight: 600;
 }
 
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 8px;
+    gap: 6px;
 }
 
 .nav-links a {
     text-decoration: none;
     color: var(--text-secondary);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 500;
     padding: 8px 14px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-inner);
     transition: all 0.25s ease;
     border: 1px solid transparent;
 }
 
 .nav-links a:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-links a.active {
-    color: var(--accent-cyan);
-    background: rgba(0, 229, 255, 0.08);
-    border-color: rgba(0, 229, 255, 0.3);
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+    color: var(--neon-cyan);
+    background: rgba(0, 240, 255, 0.1);
+    border-color: rgba(0, 240, 255, 0.35);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.18);
 }
 
-/* Przycisk mobile burger */
 .nav-toggle {
     display: none;
     background: none;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
     padding: 8px 10px;
     cursor: pointer;
     flex-direction: column;
@@ -174,342 +196,600 @@ body {
     display: block;
     width: 22px;
     height: 2px;
-    background-color: var(--text-primary);
-    transition: all 0.25s ease;
+    background-color: var(--text-white);
+    transition: 0.25s ease;
 }
 
 /* ==========================================================================
-   Treść główna
+   Treść główna & Dashboard
    ========================================================================== */
 .main-content {
     flex: 1;
-    padding: 40px 0 60px 0;
+    padding: 24px 0 50px 0;
 }
 
-/* ==========================================================================
-   Hero Section
-   ========================================================================== */
-.hero {
-    text-align: center;
-    padding: 30px 0 50px 0;
-    position: relative;
-}
-
-.hero-pill {
-    display: inline-flex;
+/* Górny pasek statusu dashboardu */
+.dashboard-topbar {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(0, 229, 255, 0.08);
-    border: 1px solid rgba(0, 229, 255, 0.25);
-    color: var(--accent-cyan);
-    padding: 6px 16px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    justify-content: space-between;
     margin-bottom: 20px;
-    box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+    padding: 12px 20px;
+    background: rgba(12, 14, 28, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-inner);
 }
 
-.hero-title {
-    font-family: var(--font-heading);
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-    margin-bottom: 16px;
-    background: linear-gradient(135deg, #ffffff 40%, #8ca4db 80%, var(--accent-cyan) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-    max-width: 680px;
-    margin: 0 auto;
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
     color: var(--text-secondary);
-    font-size: 1.15rem;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+    animation: blinkGlow 2s infinite;
+}
+
+@keyframes blinkGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.sys-time {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--neon-cyan);
+    letter-spacing: 1px;
 }
 
 /* ==========================================================================
-   Dashboard Grid & Cards (Szklane panele)
+   Siatka Dashboardu (Układ 3 na górze, 2 na dole jak na zdjęciu)
    ========================================================================== */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 24px;
-    margin-top: 10px;
+.dashboard-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.card {
-    background: var(--bg-surface);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 26px;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+.dashboard-row-top {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1.1fr;
+    gap: 20px;
+}
+
+.dashboard-row-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Karty Szklane (Glassmorphic Cards) */
+.dash-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    padding: 20px;
+    box-shadow: var(--shadow-glass);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+.dash-card:hover {
+    border-color: rgba(140, 155, 230, 0.45);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), 0 0 20px rgba(58, 134, 255, 0.15);
+}
+
+/* Nagłówki kart z kropkami neonowymi (jak na zdjęciu) */
+.dash-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.neon-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.neon-dot.blue {
+    background: var(--neon-blue);
+    box-shadow: 0 0 8px var(--neon-blue), 0 0 16px var(--neon-cyan);
+}
+
+.neon-dot.orange {
+    background: var(--neon-orange);
+    box-shadow: 0 0 8px var(--neon-orange), 0 0 16px var(--neon-yellow);
+}
+
+.dash-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-white);
+    letter-spacing: 0.3px;
+}
+
+/* ==========================================================================
+   Panel 1: Galactic Overview
+   ========================================================================== */
+.galaxy-view-box {
+    position: relative;
     width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.5), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-glow);
-    box-shadow: var(--shadow-card), var(--shadow-glow);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-/* Rozmiary kart w siatce */
-.col-8 { grid-column: span 8; }
-.col-6 { grid-column: span 6; }
-.col-4 { grid-column: span 4; }
-.col-12 { grid-column: span 12; }
-
-/* Nagłówki kart */
-.card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-}
-
-.card-title-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.card-icon {
-    width: 40px;
-    height: 40px;
+    height: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+    border-radius: var(--radius-inner);
+    background: radial-gradient(circle at center, rgba(30, 36, 70, 0.4) 0%, rgba(5, 7, 18, 0.9) 70%);
+}
+
+.galaxy-image {
+    max-width: 92%;
+    max-height: 92%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 25px rgba(255, 215, 140, 0.45)) drop-shadow(0 0 50px rgba(100, 160, 255, 0.3));
+    transition: transform 0.6s ease;
+    animation: slowSpin 140s linear infinite;
+}
+
+@keyframes slowSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.dash-card:hover .galaxy-image {
+    transform: scale(1.04);
+}
+
+/* Nakładka statystyk w prawym dolnym rogu (jak na zdjęciu) */
+.galaxy-stats-overlay {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    text-align: right;
+    background: rgba(6, 8, 20, 0.78);
+    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: var(--radius-inner);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: var(--radius-sm);
-    font-size: 1.3rem;
 }
 
-.card-title {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--text-primary);
+.galaxy-stat-item {
+    margin-bottom: 5px;
 }
 
-.badge {
+.galaxy-stat-item:last-child {
+    margin-bottom: 0;
+}
+
+.galaxy-stat-label {
+    display: block;
     font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
 }
 
-.badge-cyan {
-    background: rgba(0, 229, 255, 0.1);
-    color: var(--accent-cyan);
-    border-color: rgba(0, 229, 255, 0.25);
-}
-
-.badge-orange {
-    background: rgba(255, 123, 0, 0.1);
-    color: var(--accent-orange);
-    border-color: rgba(255, 123, 0, 0.25);
-}
-
-.badge-purple {
-    background: rgba(157, 78, 221, 0.12);
-    color: var(--accent-purple);
-    border-color: rgba(157, 78, 221, 0.3);
-}
-
-/* Wskaźniki statystyczne (stat-boxes) */
-.stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 14px;
-    margin: 16px 0;
-}
-
-.stat-box {
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    text-align: left;
-}
-
-.stat-value {
+.galaxy-stat-value {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: var(--accent-cyan);
-    display: block;
-    line-height: 1.2;
+    color: #ffffff;
+    line-height: 1.1;
 }
 
-.stat-label {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-top: 4px;
-    display: block;
+/* ==========================================================================
+   Panel 2: Exoplanet Discovery Stats (Donut Chart & Sol Inset)
+   ========================================================================== */
+.card-subtitle {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
 }
 
-/* Tabela klasyfikacji gwiazd */
-.star-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 0.9rem;
-}
-
-.star-table th,
-.star-table td {
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.star-table th {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.star-type {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    text-align: center;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-.star-o { background: #9bb0ff; color: #000; }
-.star-b { background: #bbccff; color: #000; }
-.star-a { background: #f8f9ff; color: #000; }
-.star-f { background: #ffffed; color: #000; }
-.star-g { background: #ffd27d; color: #000; } /* Słońce */
-.star-k { background: #ffaa44; color: #000; }
-.star-m { background: #ff6060; color: #fff; }
-
-/* Lista odkryć */
-.discovery-list {
-    list-style: none;
+.exoplanet-content {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    margin-top: 8px;
+    height: 100%;
 }
 
-.discovery-item {
+.donut-chart-wrapper {
     display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
 }
 
-.discovery-item-date {
-    font-size: 0.75rem;
-    color: var(--accent-cyan);
-    font-weight: 600;
-    white-space: nowrap;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: rgba(0, 229, 255, 0.08);
+.donut-svg-container {
+    width: 140px;
+    height: 140px;
+    position: relative;
+    flex-shrink: 0;
 }
 
-.discovery-item-title {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    margin-bottom: 2px;
+.donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.82rem;
 }
 
-.discovery-item-desc {
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: var(--text-secondary);
-    font-size: 0.85rem;
-    line-height: 1.4;
 }
 
-/* Przyciski interaktywne */
-.btn {
-    display: inline-flex;
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-name {
+    flex: 1;
+}
+
+.legend-pct {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Mini podgląd Sol w Drodze Mlecznej */
+.sol-radar-box {
+    margin-top: auto;
+    align-self: flex-end;
+    position: relative;
+    width: 130px;
+    height: 90px;
+    border-radius: var(--radius-inner);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.sol-radar-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    filter: hue-rotate(190deg);
+}
+
+.sol-pointer {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sol-dot {
+    width: 6px;
+    height: 6px;
+    background: #ffaa00;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #ffaa00, 0 0 14px #ff5500;
+    animation: blinkGlow 1.5s infinite;
+}
+
+.sol-label {
+    font-size: 0.75rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: #ffd27d;
+    text-shadow: 0 0 6px rgba(0,0,0,0.9);
+}
+
+/* ==========================================================================
+   Panel 3: Star Classification Distribution (Wykres słupkowy)
+   ========================================================================== */
+.star-chart-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chart-axis-wrapper {
+    display: flex;
+    gap: 10px;
+    height: 160px;
+    margin-top: 5px;
+}
+
+.chart-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding-bottom: 22px;
+    text-align: right;
+    min-width: 28px;
+}
+
+.chart-bars-area {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 8px;
-    padding: 10px 20px;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.25s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 4px;
+    position: relative;
+}
+
+.star-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.star-bar-rect {
+    width: 82%;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease;
+    position: relative;
     cursor: pointer;
-    border: none;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-    color: #07090e;
-    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+.star-bar-rect:hover {
+    transform: scaleX(1.1);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 229, 255, 0.5);
+/* Kolory słupków zgodne ze zdjęciem referencyjnym */
+.bar-o { background: linear-gradient(to top, #1e3a8a, #3b82f6); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+.bar-b { background: linear-gradient(to top, #0284c7, #38bdf8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+.bar-a { background: linear-gradient(to top, #ca8a04, #fef08a); box-shadow: 0 0 10px rgba(254, 240, 138, 0.3); }
+.bar-f { background: linear-gradient(to top, #d97706, #fbbf24); box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+.bar-g { background: linear-gradient(to top, #ea580c, #fb923c); box-shadow: 0 0 12px rgba(251, 146, 60, 0.4); }
+.bar-m { background: linear-gradient(to top, #b91c1c, #ff3344); box-shadow: 0 0 16px rgba(255, 51, 68, 0.6); }
+
+.star-type-label {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 6px;
 }
 
-.btn-outline {
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+.star-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
 }
 
-.btn-outline:hover {
-    border-color: var(--accent-cyan);
-    color: var(--accent-cyan);
-    background: rgba(0, 229, 255, 0.05);
+.star-metric-val {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: block;
+}
+
+.star-metric-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    display: block;
+}
+
+.star-bottom-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.78rem;
+}
+
+.star-bottom-stats span strong {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--neon-cyan);
+    margin-left: 4px;
+}
+
+/* ==========================================================================
+   Panel 4: Black Hole Analysis (Wykresy falowe i histogram masy)
+   ========================================================================== */
+.bh-charts-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bh-section-title {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+/* Histogram masy */
+.mass-dist-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 75px;
+    padding-left: 24px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+}
+
+.mass-dist-chart::before {
+    content: '20\A 15\A 0';
+    white-space: pre-wrap;
+    position: absolute;
+    left: 2px;
+    top: 0;
+    bottom: 0;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+.mass-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+}
+
+.mass-x-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    padding-left: 24px;
+    margin-top: 4px;
+}
+
+/* Wykres falowy akrecji (Accretion Rate) */
+.accretion-wave-box {
+    position: relative;
+    width: 100%;
+    height: 75px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 20px;
+}
+
+.accretion-wave-box::before {
+    content: '20\A\A 0';
+    white-space: pre-wrap;
+    position: absolute;
+    left: 2px;
+    top: 4px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.accretion-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.wave-path {
+    stroke: var(--neon-cyan);
+    stroke-width: 1.8;
+    fill: none;
+    filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.7));
+}
+
+.time-bracket-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.time-bracket {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-bracket::before,
+.time-bracket::after {
+    content: '';
+    width: 40px;
+    height: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.time-bracket::before {
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.time-bracket::after {
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   Panel 5: Recent Observations (Tabela jak na zdjęciu)
+   ========================================================================== */
+.obs-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.obs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-top: 4px;
+}
+
+.obs-table th {
+    text-align: left;
+    padding: 10px 14px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.obs-table td {
+    padding: 12px 14px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.obs-table tr:hover td {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-white);
+}
+
+.obs-obj-name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: #93c5fd;
 }
 
 /* ==========================================================================
    Stopka (Footer)
    ========================================================================== */
 .site-footer {
-    border-top: 1px solid var(--border-color);
-    background: rgba(5, 7, 12, 0.95);
-    padding: 40px 0;
+    border-top: 1px solid var(--card-border);
+    background: rgba(6, 8, 18, 0.9);
+    backdrop-filter: blur(12px);
+    padding: 30px 0;
     margin-top: auto;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
 }
 
 .footer-content {
@@ -517,7 +797,7 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 16px;
 }
 
 .footer-logo {
@@ -526,15 +806,14 @@ body {
     gap: 8px;
     font-family: var(--font-heading);
     font-size: 1.1rem;
-    color: var(--text-primary);
+    color: var(--text-white);
     letter-spacing: 1px;
 }
 
 .footer-desc {
     color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 4px;
-    max-width: 400px;
+    font-size: 0.82rem;
+    margin-top: 2px;
 }
 
 .footer-info {
@@ -547,20 +826,20 @@ body {
 
 .footer-source {
     color: var(--text-muted);
-    font-size: 0.8rem;
-    margin-top: 4px;
+    font-size: 0.78rem;
+    margin-top: 2px;
 }
 
 /* ==========================================================================
-   Responsywność (Media Queries)
+   Responsywność
    ========================================================================== */
-@media (max-width: 992px) {
-    .col-8, .col-6, .col-4 {
-        grid-column: span 12;
+@media (max-width: 1100px) {
+    .dashboard-row-top {
+        grid-template-columns: 1fr;
     }
 
-    .hero-title {
-        font-size: 2.3rem;
+    .dashboard-row-bottom {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -571,14 +850,14 @@ body {
 
     .nav-links {
         position: absolute;
-        top: 76px;
+        top: 70px;
         left: 0;
         width: 100%;
-        background: rgba(7, 9, 14, 0.97);
+        background: rgba(8, 10, 22, 0.98);
         backdrop-filter: blur(20px);
         flex-direction: column;
-        padding: 20px 24px;
-        border-bottom: 1px solid var(--border-color);
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--card-border);
         display: none;
     }
 
