@@ -9,19 +9,36 @@ define('NASA_API_KEY', 'DEMO_KEY'); // Oficjalny klucz demonstracyjny NASA API
 
 /**
  * Pomocnicza funkcja wykonująca zapytanie HTTP z limitem czasu
+ * Używa cURL dla najlepszej kompatybilności z HTTPS
  */
-function fetchHttp($url, $timeoutSeconds = 3) {
+function fetchHttp($url, $timeoutSeconds = 6) {
+    // Próbuj przez cURL (szybsze, lepsze HTTPS)
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => $timeoutSeconds,
+            CURLOPT_CONNECTTIMEOUT => 4,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_USERAGENT      => 'BEYOND-Astronomy-Portal/1.0',
+            CURLOPT_FOLLOWLOCATION => true,
+        ]);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result ?: false;
+    }
+
+    // Fallback: file_get_contents
     $context = stream_context_create([
         'http' => [
             'timeout' => $timeoutSeconds,
             'header'  => "User-Agent: BEYOND-Astronomy-Portal/1.0\r\n"
         ],
         'ssl' => [
-            'verify_peer' => false,
+            'verify_peer'      => false,
             'verify_peer_name' => false
         ]
     ]);
-    
     $result = @file_get_contents($url, false, $context);
     return $result ?: false;
 }
@@ -122,8 +139,9 @@ function getDeepSpaceFeed() {
     }
 
     // 1. Pobierz z NASA TAP API najnowszą potwierdzoną egzoplanetę
-    $latestExoUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' . urlencode('select top 1 pl_name, hostname, discoverymethod, disc_year, sy_dist from ps where default_flag=1 order by releasedate desc') . '&format=json';
-    $exoJson = fetchHttp($latestExoUrl, 3);
+    // Filtrujemy od 2024 wzwyż i sortujemy po dacie aktualizacji wpisu (rowupdate desc)
+    $latestExoUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' . urlencode('select top 1 pl_name, hostname, discoverymethod, disc_year, sy_dist from ps where default_flag=1 and disc_year >= 2024 order by rowupdate desc') . '&format=json';
+    $exoJson = fetchHttp($latestExoUrl, 6);
     
     $exoName = 'Kepler-762 b';
     $exoDist = '1 898 lat św.';

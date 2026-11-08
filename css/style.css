@@ -881,6 +881,331 @@ body {
 }
 
 /* ==========================================================================
+   Układ Słoneczny — style strony uklad.php
+   ========================================================================== */
+
+/* Hero nagłówek strony planet */
+.planets-hero {
+    padding: 36px 0 28px;
+    text-align: center;
+}
+
+.hero-pill {
+    display: inline-block;
+    padding: 6px 18px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 999px;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--neon-cyan);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-white);
+    margin-bottom: 12px;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    max-width: 640px;
+    margin: 0 auto 28px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+
+/* Przyciski filtru kategorii */
+.planet-filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.03em;
+}
+
+.filter-btn:hover {
+    border-color: rgba(0, 240, 255, 0.35);
+    color: var(--text-white);
+    background: rgba(0, 240, 255, 0.06);
+}
+
+.filter-btn.active {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(0, 240, 255, 0.1);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.2);
+}
+
+/* Siatka kart planet */
+.planets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 22px;
+    padding-bottom: 48px;
+}
+
+/* Karta planety — buduje na .dash-card */
+.planet-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.planet-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.planet-order-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.planet-symbol {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* Scena wizualna planety */
+.planet-visual-stage {
+    position: relative;
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.planet-glow-halo {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.planet-card:hover .planet-glow-halo {
+    opacity: 1;
+}
+
+.planet-globe-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.planet-card:hover .planet-globe-img {
+    transform: scale(1.06);
+    box-shadow: 0 12px 44px rgba(0, 0, 0, 0.75);
+}
+
+/* Tytuł planety */
+.planet-title-row {
+    padding: 14px 20px 8px;
+}
+
+.planet-name {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-white);
+    margin: 0;
+}
+
+/* Macierz statystyk */
+.planet-stats-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0 20px 14px;
+}
+
+.planet-stat-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+/* Gdy stat zajmuje pełną szerokość (np. 5. element) */
+.planet-stats-matrix .planet-stat-cell:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.p-stat-lbl {
+    font-family: var(--font-ui);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.p-stat-val {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.3;
+}
+
+.p-stat-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Ciekawostka naukowa */
+.planet-fact-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 20px 14px;
+    padding: 12px 14px;
+    background: rgba(0, 240, 255, 0.04);
+    border-left: 3px solid rgba(0, 240, 255, 0.4);
+    border-radius: 0 10px 10px 0;
+}
+
+.fact-bulb {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.fact-text {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Akordeon szczegółów */
+.planet-accordion {
+    margin: 0 20px 20px;
+}
+
+.accordion-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.accordion-toggle:hover,
+.accordion-toggle.open {
+    background: rgba(0, 240, 255, 0.07);
+    border-color: rgba(0, 240, 255, 0.25);
+    color: var(--neon-cyan);
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--neon-cyan);
+    transition: transform 0.3s;
+}
+
+.accordion-toggle.open .toggle-icon {
+    transform: rotate(45deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.details-inner-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding-top: 8px;
+}
+
+.detail-row {
+    display: flex;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.025);
+    border-radius: 8px;
+    align-items: flex-start;
+}
+
+.d-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    min-width: 120px;
+    padding-top: 1px;
+}
+
+.d-val {
+    font-size: 0.83rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ==========================================================================
    Responsywność (Media Queries)
    ========================================================================== */
 @media (max-width: 1100px) {
@@ -922,5 +1247,17 @@ body {
 
     .footer-info {
         text-align: center;
+    }
+
+    .planets-grid {
+        grid-template-columns: 1fr;
+    }
+    .planet-filter-buttons {
+        gap: 8px;
+    }
+
+    .filter-btn {
+        font-size: 0.75rem;
+        padding: 7px 14px;
     }
 }
