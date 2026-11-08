@@ -1,11 +1,28 @@
 <?php
 /**
  * BEYOND — Nowoczesny Pulpit Astronomiczny (Dashboard)
- * Zaawansowane centrum obserwacji kosmicznych z danymi telemetrycznymi
+ * Integracja w czasie rzeczywistym z oficjalnymi API NASA
  */
 
 $pageTitle = 'Pulpit Operacji Galaktycznych';
 require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/api.php';
+
+// Pobieranie autentycznych danych na żywo z NASA API (z cache)
+$exoData = getNasaExoplanetData();
+$deepSpaceFeed = getDeepSpaceFeed();
+
+// Dynamiczne obliczenia segmentów koła SVG (Donut) na podstawie danych NASA
+$pctTransit = $exoData['methods']['Transit'];
+$pctRV = $exoData['methods']['Radial Velocity'];
+$pctMicro = $exoData['methods']['Microlensing'];
+$pctImg = $exoData['methods']['Imaging'];
+
+// Obliczenie offsetów SVG
+$offset1 = 25;
+$offset2 = ($offset1 - $pctTransit + 100) % 100;
+$offset3 = ($offset2 - $pctRV + 100) % 100;
+$offset4 = ($offset3 - $pctMicro + 100) % 100;
 ?>
 
 <div class="container">
@@ -26,14 +43,14 @@ require_once __DIR__ . '/includes/header.php';
                     <img src="images/milky-way.jpg" alt="Droga Mleczna" class="galaxy-image">
                 </div>
                 
-                <!-- Statystyki umieszczone pod zdjęciem, a nie na nim -->
+                <!-- Statystyki umieszczone pod zdjęciem -->
                 <div class="galaxy-stats-row">
                     <div class="galaxy-stat-box">
                         <span class="galaxy-stat-value">250 Mld</span>
                         <span class="galaxy-stat-label">Widoczne gwiazdy</span>
                     </div>
                     <div class="galaxy-stat-box">
-                        <span class="galaxy-stat-value">5 632</span>
+                        <span class="galaxy-stat-value"><?= number_format($exoData['total'], 0, '', ' ') ?></span>
                         <span class="galaxy-stat-label">Egzoplanety</span>
                     </div>
                     <div class="galaxy-stat-box">
@@ -43,71 +60,76 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
 
-            <!-- Panel 2: Statystyki Odkryć Egzoplanet -->
+            <!-- Panel 2: Statystyki Odkryć Egzoplanet (Live NASA Archive API) -->
             <div class="dash-card">
-                <div class="dash-card-header">
-                    <span class="neon-dot blue"></span>
-                    <h2 class="dash-card-title">Odkrycia Egzoplanet</h2>
+                <div class="dash-card-header" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="neon-dot blue"></span>
+                        <h2 class="dash-card-title">Odkrycia Egzoplanet</h2>
+                    </div>
+                    <span style="font-size: 0.68rem; color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.12); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 5px;">
+                        <span class="pulse-dot" style="width: 5px; height: 5px; background: #10b981; box-shadow: 0 0 8px #10b981;"></span> NASA API LIVE
+                    </span>
                 </div>
 
                 <div class="exoplanet-content">
-                    <div class="card-subtitle">Rozkład metod detekcji planet</div>
+                    <div class="card-subtitle">Rozkład metod detekcji planet (NASA Exoplanet Archive)</div>
                     
                     <div class="donut-chart-wrapper">
-                        <!-- Nowoczesny SVG Donut Chart ze środkową etykietą -->
+                        <!-- Nowoczesny SVG Donut Chart wyliczany z żywych danych NASA -->
                         <div class="donut-svg-container">
                             <svg width="145" height="145" viewBox="0 0 42 42">
                                 <circle class="donut-hole" cx="21" cy="21" r="15.915" fill="transparent"></circle>
                                 <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="rgba(255,255,255,0.06)" stroke-width="5.5"></circle>
                                 
-                                <!-- Tranzyt 65% (Pomarańcz) -->
+                                <!-- Tranzyt -->
                                 <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff9f1c" stroke-width="5.5"
-                                        stroke-dasharray="65 35" stroke-dashoffset="25" stroke-linecap="round"></circle>
+                                        stroke-dasharray="<?= $pctTransit ?> <?= 100 - $pctTransit ?>" stroke-dashoffset="<?= $offset1 ?>" stroke-linecap="round"></circle>
                                 
-                                <!-- Prędkość radialna 22% (Niebieski) -->
+                                <!-- Prędkość radialna -->
                                 <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#3b82f6" stroke-width="5.5"
-                                        stroke-dasharray="22 78" stroke-dashoffset="60" stroke-linecap="round"></circle>
+                                        stroke-dasharray="<?= $pctRV ?> <?= 100 - $pctRV ?>" stroke-dashoffset="<?= $offset2 ?>" stroke-linecap="round"></circle>
                                 
-                                <!-- Mikrosoczewkowanie 8% (Fiolet) -->
+                                <!-- Mikrosoczewkowanie -->
                                 <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#a855f7" stroke-width="5.5"
-                                        stroke-dasharray="8 92" stroke-dashoffset="38" stroke-linecap="round"></circle>
+                                        stroke-dasharray="<?= $pctMicro ?> <?= 100 - $pctMicro ?>" stroke-dashoffset="<?= $offset3 ?>" stroke-linecap="round"></circle>
                                 
-                                <!-- Bezpośrednie obrazowanie 5% (Cyan) -->
+                                <!-- Bezpośrednie obrazowanie -->
                                 <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#00f0ff" stroke-width="5.5"
-                                        stroke-dasharray="5 95" stroke-dashoffset="30" stroke-linecap="round"></circle>
+                                        stroke-dasharray="<?= $pctImg ?> <?= 100 - $pctImg ?>" stroke-dashoffset="<?= $offset4 ?>" stroke-linecap="round"></circle>
                                 
-                                <!-- Licznik w centrum donuta -->
-                                <text x="21" y="20" text-anchor="middle" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-size="5.8" font-weight="700">5 632</text>
-                                <text x="21" y="25" text-anchor="middle" fill="#94a3b8" font-family="'Plus Jakarta Sans', sans-serif" font-size="2.6" font-weight="600" letter-spacing="0.5">PLANET</text>
+                                <!-- Licznik pobrany na żywo z NASA -->
+                                <text x="21" y="20" text-anchor="middle" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-size="5.4" font-weight="700"><?= number_format($exoData['total'], 0, '', ' ') ?></text>
+                                <text x="21" y="25" text-anchor="middle" fill="#94a3b8" font-family="'Plus Jakarta Sans', sans-serif" font-size="2.5" font-weight="600" letter-spacing="0.5">PLANET</text>
                             </svg>
                         </div>
 
-                        <!-- Legenda po polsku -->
+                        <!-- Legenda wyliczana z żywych danych NASA -->
                         <div class="donut-legend">
                             <div class="legend-row">
                                 <span class="legend-dot" style="background: #ff9f1c; box-shadow: 0 0 8px #ff9f1c;"></span>
                                 <span class="legend-name">Tranzyt</span>
-                                <span class="legend-pct">65%</span>
+                                <span class="legend-pct"><?= $pctTransit ?>%</span>
                             </div>
                             <div class="legend-row">
                                 <span class="legend-dot" style="background: #3b82f6; box-shadow: 0 0 8px #3b82f6;"></span>
                                 <span class="legend-name">Prędkość radialna</span>
-                                <span class="legend-pct">22%</span>
+                                <span class="legend-pct"><?= $pctRV ?>%</span>
                             </div>
                             <div class="legend-row">
                                 <span class="legend-dot" style="background: #a855f7; box-shadow: 0 0 8px #a855f7;"></span>
                                 <span class="legend-name">Mikrosoczewkowanie</span>
-                                <span class="legend-pct">8%</span>
+                                <span class="legend-pct"><?= $pctMicro ?>%</span>
                             </div>
                             <div class="legend-row">
                                 <span class="legend-dot" style="background: #00f0ff; box-shadow: 0 0 8px #00f0ff;"></span>
                                 <span class="legend-name">Bezpośrednie foto</span>
-                                <span class="legend-pct">5%</span>
+                                <span class="legend-pct"><?= $pctImg ?>%</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Kluczowa informacja o egzoplanetach -->
+                    <!-- Informacja o źródle danych -->
                     <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
                         <span>Najbliższa egzoplaneta:</span>
                         <strong style="color: var(--neon-cyan);">Proxima Centauri b (4.24 lat św.)</strong>
@@ -256,7 +278,6 @@ require_once __DIR__ . '/includes/header.php';
                                         <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.0" />
                                     </linearGradient>
                                 </defs>
-                                <!-- Wypełnienie gradientowe pod falą -->
                                 <path fill="url(#waveGlow)" d="M 0,45 
                                          Q 20,40 35,46 
                                          T 70,35 
@@ -273,7 +294,6 @@ require_once __DIR__ . '/includes/header.php';
                                          T 455,40 
                                          T 500,28 
                                          L 500,70 L 0,70 Z" />
-                                <!-- Świecąca linia telemetryczna -->
                                 <path class="wave-path" d="M 0,45 
                                          Q 20,40 35,46 
                                          T 70,35 
@@ -298,71 +318,53 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
 
-            <!-- Panel 5: Ostatnie Obserwacje -->
+            <!-- Panel 5: Obserwacje Głębokiego Kosmosu & Flota Badawcza -->
             <div class="dash-card">
-                <div class="dash-card-header">
-                    <span class="neon-dot orange"></span>
-                    <h2 class="dash-card-title">Ostatnie Obserwacje</h2>
+                <div class="dash-card-header" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="neon-dot orange"></span>
+                        <h2 class="dash-card-title">Głęboki Kosmos</h2>
+                    </div>
+                    <span style="font-size: 0.68rem; color: #ff9f1c; font-weight: 700; background: rgba(255, 159, 28, 0.12); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(255, 159, 28, 0.3); display: inline-flex; align-items: center; gap: 5px;">
+                        <span class="pulse-dot" style="width: 5px; height: 5px; background: #ff9f1c; box-shadow: 0 0 8px #ff9f1c;"></span> LIVE FEED
+                    </span>
                 </div>
 
                 <div class="obs-table-container">
                     <table class="obs-table">
                         <thead>
                             <tr>
-                                <th>Obiekt</th>
+                                <th>Obiekt / Misja</th>
                                 <th>Kategoria</th>
-                                <th>Odległość</th>
-                                <th>Opis / Wyniki</th>
+                                <th>Dystans</th>
+                                <th>Status / Cel badawczy</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <?php foreach ($deepSpaceFeed as $item): ?>
                             <tr>
                                 <td class="obs-obj-name">
-                                    <span>🌌</span> NGC 6822
+                                    <span><?= $item['icon'] ?></span> <?= htmlspecialchars($item['name']) ?>
                                 </td>
                                 <td>
-                                    <span class="obs-badge badge-galaxy">Galaktyka karłowata</span>
+                                    <span class="obs-badge <?= htmlspecialchars($item['badge']) ?>">
+                                        <?= htmlspecialchars($item['type']) ?>
+                                    </span>
                                 </td>
-                                <td>1.6 mln lat św.</td>
-                                <td>Intensywna formacja gwiezdna w obłokach gazu</td>
+                                <td style="font-family: var(--font-heading); color: #ffffff;"><?= htmlspecialchars($item['distance']) ?></td>
+                                <td><?= $item['notes'] ?></td>
                             </tr>
-                            <tr>
-                                <td class="obs-obj-name">
-                                    <span>🪐</span> Kepler-452b
-                                </td>
-                                <td>
-                                    <span class="obs-badge badge-exoplanet">Egzoplaneta</span>
-                                </td>
-                                <td>1 400 lat św.</td>
-                                <td>Kandydat na planetę skalistą w strefie zamieszkiwalnej</td>
-                            </tr>
-                            <tr>
-                                <td class="obs-obj-name">
-                                    <span>🕳️</span> M87*
-                                </td>
-                                <td>
-                                    <span class="obs-badge badge-bh">Supermasywna czarna dziura</span>
-                                </td>
-                                <td>53 mln lat św.</td>
-                                <td>Zaobserwowano polaryzację dżetu relatywistycznego</td>
-                            </tr>
-                            <tr>
-                                <td class="obs-obj-name">
-                                    <span>💥</span> SN 2023hx
-                                </td>
-                                <td>
-                                    <span class="obs-badge badge-supernova">Supernowa</span>
-                                </td>
-                                <td>220 mln lat św.</td>
-                                <td>Supernowa typu Ia, szczytowa jasność fotosfery</td>
-                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 16px; display: flex; justify-content: flex-end;">
+                <div style="margin-top: auto; padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">
+                        Dane: NASA Exoplanet Science &bull; JPL Horizons Telemetry
+                    </span>
                     <a href="odkrycia.php" style="font-family: var(--font-ui); font-size: 0.84rem; font-weight: 600; color: var(--neon-cyan); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                        Przejdź do pełnego dziennika odkryć &rarr;
+                        Wszystkie odkrycia &rarr;
                     </a>
                 </div>
             </div>

@@ -1,0 +1,34 @@
+[
+    {
+        "icon": "\ud83d\udd2d",
+        "name": "James Webb (JWST)",
+        "type": "Teleskop g\u0142\u0119bokiego kosmosu",
+        "badge": "badge-galaxy",
+        "distance": "1.5 mln km (L2)",
+        "notes": "Obserwacje w podczerwieni: galaktyki wczesnego Wszech\u015bwiata"
+    },
+    {
+        "icon": "\ud83e\ude90",
+        "name": "Kepler-992 b",
+        "type": "Nowo odkryta egzoplaneta (NASA)",
+        "badge": "badge-exoplanet",
+        "distance": "259.6 lat \u015bw.",
+        "notes": "Odkrycie: 2016 r., metoda: Transit"
+    },
+    {
+        "icon": "\ud83d\udd73\ufe0f",
+        "name": "Sagittarius A* \/ M87*",
+        "type": "Supermasywna czarna dziura",
+        "badge": "badge-bh",
+        "distance": "26 000 \/ 53 mln lat \u015bw.",
+        "notes": "Cie\u0144 horyzontu zdarze\u0144 i relatywistyczny d\u017cet plazmy (EHT)"
+    },
+    {
+        "icon": "\ud83d\ude80",
+        "name": "Voyager 1 (Interstellar)",
+        "type": "Przestrze\u0144 mi\u0119dzygwiezdna",
+        "badge": "badge-supernova",
+        "distance": "25,94 mld km",
+        "notes": "Najdalszy obiekt cz\u0142owieka &bull; sygna\u0142 radiowy leci ~22h 38m"
+    }
+]

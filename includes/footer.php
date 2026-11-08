@@ -16,7 +16,7 @@
                     Made by Emilia Dudzik &bull; <?= date('Y') ?>
                 </p>
                 <p class="footer-source">
-                    Dane i zdjęcia: NASA Open APIs &bull; ESA &bull; ESO
+                    API: NASA &bull; ESA &bull; ESO
                 </p>
             </div>
         </div>

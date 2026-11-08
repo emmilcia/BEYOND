@@ -1,0 +1,11 @@
+{
+    "total": 6464,
+    "methods": {
+        "Transit": 74,
+        "Radial Velocity": 19,
+        "Microlensing": 5,
+        "Imaging": 2
+    },
+    "timestamp": 1794151051,
+    "source": "Na \u017cywo: NASA Exoplanet Archive API"
+}
