@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Push do GitHub",
+      "type": "shell",
+      "command": "git add -A && git commit -m 'Aktualizacja z Antigravity' && git push origin main",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

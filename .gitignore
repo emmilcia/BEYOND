@@ -1,0 +1,11 @@
+# Pliki systemowe
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Środowisko i konfiguracje lokalne
+.env
+*.log
+
+# Opcjonalne edytory
+.idea/
