@@ -1,4 +1,7 @@
 <?php
+
+//CHCIALABYM PANU POWIEDZIEC PANIE JONKISZU ZE NADAL NIE ROZUMIEM JAK DZIALA API I TO CALE PODLACZANIE WIEC TAK WSZYSTKO ZWIAZANE Z API ZOSTALO ZCZATOWANE//
+
 // Wspólna lista artykułów wykorzystywana na stronie listy i w widoku pojedynczego tekstu.
 return [
     [

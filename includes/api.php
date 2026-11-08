@@ -1,4 +1,7 @@
 <?php
+
+//CHCIALABYM PANU POWIEDZIEC PANIE JONKISZU ZE NADAL NIE ROZUMIEM JAK DZIALA API I TO CALE PODLACZANIE WIEC TAK WSZYSTKO ZWIAZANE Z API ZOSTALO ZCZATOWANE//
+
 // Folder na pliki cache (żeby nie odpytywać API przy każdym wejściu na stronę)
 define('CACHE_DIR', __DIR__ . '/../data');
 
