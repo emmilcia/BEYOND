@@ -67,9 +67,6 @@ $offset4 = ($offset3 - $pctMicro + 100) % 100;
                         <span class="neon-dot blue"></span>
                         <h2 class="dash-card-title">Odkrycia Egzoplanet</h2>
                     </div>
-                    <span style="font-size: 0.68rem; color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.12); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 5px;">
-                        <span class="pulse-dot" style="width: 5px; height: 5px; background: #10b981; box-shadow: 0 0 8px #10b981;"></span> NASA API LIVE
-                    </span>
                 </div>
 
                 <div class="exoplanet-content">
@@ -325,9 +322,6 @@ $offset4 = ($offset3 - $pctMicro + 100) % 100;
                         <span class="neon-dot orange"></span>
                         <h2 class="dash-card-title">Głęboki Kosmos</h2>
                     </div>
-                    <span style="font-size: 0.68rem; color: #ff9f1c; font-weight: 700; background: rgba(255, 159, 28, 0.12); padding: 3px 8px; border-radius: 20px; border: 1px solid rgba(255, 159, 28, 0.3); display: inline-flex; align-items: center; gap: 5px;">
-                        <span class="pulse-dot" style="width: 5px; height: 5px; background: #ff9f1c; box-shadow: 0 0 8px #ff9f1c;"></span> LIVE FEED
-                    </span>
                 </div>
 
                 <div class="obs-table-container">

@@ -2,6 +2,7 @@
 $pageTitle = 'Misje kosmiczne';
 require_once __DIR__ . '/includes/header.php';
 
+// Dane programów i misji wyświetlane w rozwijanych sekcjach poniżej.
 $programs = [
     [
         'name' => 'Artemis',
@@ -109,6 +110,7 @@ $programs = [
 ?>
 
 <div class="container">
+    <!-- Każdy program rozwija listę przypisanych do niego misji. -->
     <section class="mission-hero" aria-labelledby="missions-title">
         <div class="mission-hero-copy">
             <div class="mission-eyebrow">Programy i wyprawy</div>

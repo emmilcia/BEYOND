@@ -1,4 +1,5 @@
 <?php
+// Wspólna lista artykułów wykorzystywana na stronie listy i w widoku pojedynczego tekstu.
 return [
     [
         'slug' => 'czarne-dziury-pola-magnetyczne',

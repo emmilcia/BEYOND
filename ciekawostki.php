@@ -1,129 +1,91 @@
 <?php
 $pageTitle = 'Ciekawostki';
 
+// Podstawowa lista faktów; szczegółowe rozwinięcia poniżej odpowiadają jej pozycjom.
 $facts = [
     [
         'category' => 'Słońce',
         'text' => 'Słońce skupia około 99,86% masy całego Układu Słonecznego. Wszystkie planety, księżyce i mniejsze ciała razem ważą zaledwie ułamek reszty.',
-        'image' => 'images/planets/sun.jpg',
-        'alt' => 'Słońce'
     ],
     [
         'category' => 'Słońce',
         'text' => 'Światło ze Słońca dociera do Ziemi po około 8 minutach i 20 sekundach. Gdy patrzymy na Słońce, widzimy je takim, jakie było kilka minut temu.',
-        'image' => 'images/planets/sun.jpg',
-        'alt' => 'Słońce widziane z kosmosu'
     ],
     [
         'category' => 'Merkury',
         'text' => 'Na biegunach Merkurego znajdują się kratery, których dna nigdy nie oświetla Słońce. W tych zimnych pułapkach wykryto wodny lód.',
-        'image' => 'images/planets/mercury.jpg',
-        'alt' => 'Merkury'
     ],
     [
         'category' => 'Wenus',
         'text' => 'Doba gwiazdowa na Wenus trwa dłużej niż jej rok: obrót planety zajmuje około 243 dni ziemskich, a obieg wokół Słońca około 225 dni.',
-        'image' => 'images/planets/venus.jpg',
-        'alt' => 'Wenus'
     ],
     [
         'category' => 'Mars',
         'text' => 'Olympus Mons na Marsie jest najwyższym znanym wulkanem w Układzie Słonecznym. Od podnóża do szczytu ma około 22 kilometrów.',
-        'image' => 'images/planets/mars.jpg',
-        'alt' => 'Mars'
     ],
     [
         'category' => 'Jowisz',
         'text' => 'Wielka Czerwona Plama Jowisza to ogromny wir atmosferyczny, obserwowany od co najmniej XIX wieku. Jest tak rozległy, że zmieściłaby się w nim Ziemia.',
-        'image' => 'images/planets/jupiter.jpg',
-        'alt' => 'Jowisz z widocznymi pasami chmur'
     ],
     [
         'category' => 'Jowisz',
         'text' => 'Ganimedes, księżyc Jowisza, jest większy od Merkurego. To największy księżyc w całym Układzie Słonecznym.',
-        'image' => 'images/planets/jupiter.jpg',
-        'alt' => 'Jowisz i jego otoczenie'
     ],
     [
         'category' => 'Europa',
         'text' => 'Pod lodową skorupą Europy, księżyca Jowisza, może znajdować się słony ocean. To obiecujące miejsce do badań, ale nie znaleziono tam dowodów na życie.',
-        'image' => 'images/articles/europa-galileo.jpg',
-        'alt' => 'Popękana, lodowa powierzchnia księżyca Europa'
     ],
     [
         'category' => 'Saturn',
         'text' => 'Średnia gęstość Saturna jest mniejsza niż gęstość wody. Często mówi się, że planeta unosiłaby się w ogromnym oceanie, choć taki zbiornik oczywiście nie istnieje.',
-        'image' => 'images/planets/saturn.jpg',
-        'alt' => 'Saturn i jego pierścienie'
     ],
     [
         'category' => 'Księżyc',
         'text' => 'Księżyc oddala się od Ziemi średnio o około 3,8 centymetra rocznie. Naukowcy mierzą tę zmianę, odbijając impulsy laserowe od reflektorów pozostawionych na jego powierzchni.',
-        'image' => 'images/planets/earth.jpg',
-        'alt' => 'Ziemia widziana z kosmosu'
     ],
     [
         'category' => 'Księżyc',
         'text' => 'Tak zwana niewidoczna strona Księżyca nie jest wiecznie ciemna. Otrzymuje tyle samo światła słonecznego co strona zwrócona ku Ziemi, tylko nie widzimy jej z naszej planety.',
-        'image' => 'images/space-bg.jpg',
-        'alt' => 'Księżyc na tle przestrzeni kosmicznej'
     ],
     [
         'category' => 'Czarne dziury',
         'text' => 'W centrum Drogi Mlecznej znajduje się Sagittarius A*, supermasywna czarna dziura o masie około czterech milionów Słońc.',
-        'image' => 'images/articles/black-hole-m87.jpg',
-        'alt' => 'Galaktyka z aktywnym centrum'
     ],
     [
         'category' => 'Czarne dziury',
         'text' => 'Czarna dziura nie zasysa wszystkiego z dowolnej odległości. Gdyby Słońce zastąpić czarną dziurą o tej samej masie, Ziemia nadal krążyłaby po podobnej orbicie.',
-        'image' => 'images/articles/black-hole-m87.jpg',
-        'alt' => 'Galaktyka M87, w której centrum znajduje się supermasywna czarna dziura'
     ],
     [
         'category' => 'Wszechświat',
         'text' => 'Obserwowalny Wszechświat ma około 93 miliardów lat świetlnych średnicy. To nie wiek kosmosu: przestrzeń rozszerzała się, gdy światło podróżowało do nas.',
-        'image' => 'images/articles/cosmology-xdf.jpg',
-        'alt' => 'Odległe galaktyki w głębokim polu Hubble’a'
     ],
     [
         'category' => 'Kosmiczne misje',
         'text' => 'Międzynarodowa Stacja Kosmiczna okrąża Ziemię mniej więcej co 90 minut. Załoga może więc zobaczyć około 16 wschodów i zachodów Słońca w ciągu doby.',
-        'image' => 'images/space-bg.jpg',
-        'alt' => 'Przestrzeń kosmiczna wokół Ziemi'
     ],
     [
         'category' => 'Teleskopy',
         'text' => 'Teleskop Jamesa Webba obserwuje głównie podczerwień. Dzięki temu może badać ciepłe obiekty i światło odległych galaktyk rozciągnięte przez rozszerzanie się Wszechświata.',
-        'image' => 'images/articles/star-formation-carina.jpg',
-        'alt' => 'Obszar powstawania gwiazd sfotografowany w podczerwieni'
     ],
     [
         'category' => 'Droga Mleczna',
         'text' => 'Gwiazdy, które z Ziemi wyglądają jak sąsiadki na jednej linii, często dzielą ogromne odległości. Gwiazdozbiory to wzory na naszym niebie, a nie zwarte grupy gwiazd.',
-        'image' => 'images/milky-way.jpg',
-        'alt' => 'Pas Drogi Mlecznej na nocnym niebie'
     ],
     [
         'category' => 'Egzoplanety',
         'text' => 'Skład atmosfery odległej planety można badać, analizując światło jej gwiazdy, które przechodzi przez atmosferę podczas tranzytu.',
-        'image' => 'images/articles/exoplanet-trappist-1f.jpg',
-        'alt' => 'Artystyczna wizja powierzchni egzoplanety'
     ],
     [
         'category' => 'Słońce',
         'text' => 'W jądrze Słońca około 600 milionów ton wodoru łączy się w hel w każdej sekundzie. Niewielka część masy zamienia się przy tym w energię.',
-        'image' => 'images/planets/sun.jpg',
-        'alt' => 'Słońce'
     ],
     [
         'category' => 'Neptun',
         'text' => 'Neptun został najpierw przewidziany matematycznie. Astronomowie wyliczyli, gdzie może się znajdować, analizując zaburzenia orbity Urana, a potem odnaleźli go na niebie.',
-        'image' => 'images/planets/neptune.jpg',
-        'alt' => 'Neptun'
     ]
 ];
 
+// Rozwinięcia są dopisywane do pierwszych 20 faktów według ich indeksów.
 $factDetails = [
     'Słońce zawiera niemal całą materię, która skupiła się podczas powstawania naszego układu. Sama Ziemia stanowi zaledwie maleńką część jego masy.',
     'Odległość od Słońca wynosi średnio około 150 milionów kilometrów, czyli jedną jednostkę astronomiczną. Mimo tej drogi światło pokonuje ją szybciej niż jakikolwiek znany nam obiekt.',
@@ -153,7 +115,6 @@ if (count($factDetails) !== count($facts)) {
 
 foreach ($facts as $index => &$fact) {
     $fact['text'] .= ' ' . $factDetails[$index];
-    unset($fact['image'], $fact['alt']);
 }
 unset($fact);
 

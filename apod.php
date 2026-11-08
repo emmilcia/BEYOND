@@ -1,7 +1,7 @@
 <?php
 /**
- * BEYOND — Zdjęcie dnia (APOD).
- * Strona pokazuje aktualne zdjęcie z NASA wraz z opisem i datą publikacji.
+ * BEYOND — zdjęcie dnia (APOD).
+ * Widok prezentuje dane pobrane przez funkcje z includes/api.php.
  */
 
 $pageTitle = 'Zdjęcie dnia (APOD)';

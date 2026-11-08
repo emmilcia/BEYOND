@@ -850,6 +850,10 @@ body {
     gap: 16px;
 }
 
+.footer-brand {
+    text-align: left;
+}
+
 .footer-logo {
     display: flex;
     align-items: center;
@@ -1242,11 +1246,11 @@ body {
 
     .footer-content {
         flex-direction: column;
-        text-align: center;
+        align-items: stretch;
     }
 
     .footer-info {
-        text-align: center;
+        text-align: right;
     }
 
     .planets-grid {
