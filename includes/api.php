@@ -194,3 +194,131 @@ function voyagerDystans() {
     $km               = $kmNa1Styczen2024 + $sekundy * $predkoscKmS;
     return number_format($km / 1_000_000_000, 2, ',', ' ') . ' mld km';
 }
+
+// Pobiera zdjęcie dnia z NASA APOD.
+// Od października 2026 endpoint api.nasa.gov/planetary/apod zaczyna zwracać
+// logo NASA zamiast realnego zdjęcia. Dlatego jako główne źródło używamy
+// oficjalnego RSS APOD ze strony science.nasa.gov i dopiero potem fallbacku lokalnego.
+function isBrokenApodPayload(array $decoded): bool {
+    $title = strtolower((string)($decoded['title'] ?? ''));
+    $url = (string)($decoded['url'] ?? '');
+    $hdUrl = (string)($decoded['hdurl'] ?? '');
+
+    if ($title === 'nasa science' || $title === 'nasa logo') {
+        return true;
+    }
+
+    foreach ([$url, $hdUrl] as $candidate) {
+        if ($candidate !== '' && stripos($candidate, 'nasa-logo') !== false) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function fetchApodFromScienceFeed(): ?array {
+    $feedUrl = 'https://science.nasa.gov/feed/apod-basic/';
+    $xml = fetchHttp($feedUrl, 12);
+
+    if (!$xml) {
+        return null;
+    }
+
+    $feed = @simplexml_load_string($xml);
+    if (!$feed || !isset($feed->channel->item)) {
+        return null;
+    }
+
+    $namespace = 'https://science.nasa.gov/apod/';
+
+    foreach ($feed->channel->item as $item) {
+        $title = trim((string)$item->title);
+        $pubDate = trim((string)$item->pubDate);
+        $imageUrl = '';
+
+        if (isset($item->children($namespace)->hdurl)) {
+            $imageUrl = trim((string)$item->children($namespace)->hdurl);
+        }
+
+        if ($imageUrl === '' && isset($item->enclosure)) {
+            $imageUrl = trim((string)$item->enclosure['url']);
+        }
+
+        $description = trim((string)$item->description);
+        if ($description === '' && isset($item->children($namespace)->explanation)) {
+            $description = trim((string)$item->children($namespace)->explanation);
+        }
+
+        $copyright = '';
+        if (isset($item->children($namespace)->copyright)) {
+            $copyright = trim(strip_tags((string)$item->children($namespace)->copyright));
+        }
+
+        if ($title === '' || $imageUrl === '') {
+            continue;
+        }
+
+        if (stripos($title, 'nasa science') !== false || stripos($imageUrl, 'nasa-logo') !== false) {
+            continue;
+        }
+
+        if (!filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+            continue;
+        }
+
+        $safeExplanation = strip_tags($description);
+        $safeExplanation = preg_replace('/\s+/', ' ', $safeExplanation);
+
+        return [
+            'title' => $title,
+            'date' => $pubDate !== '' ? date('Y-m-d', strtotime($pubDate)) : date('Y-m-d'),
+            'explanation' => $safeExplanation !== '' ? $safeExplanation : 'Opis nie jest dostępny.',
+            'media_type' => 'image',
+            'url' => $imageUrl,
+            'copyright' => $copyright !== '' ? $copyright : 'NASA'
+        ];
+    }
+
+    return null;
+}
+
+function getApodData() {
+    $cacheFile = CACHE_DIR . '/cache_apod.json';
+    $cacheLifetime = 3600;
+
+    $fallback = [
+        'title' => 'Kosmiczny krajobraz',
+        'date' => date('Y-m-d'),
+        'explanation' => 'NASA API chwilowo nie odpowiada. Wczytano lokalne zdjęcie zapasowe.',
+        'media_type' => 'image',
+        'url' => 'images/space-bg.jpg',
+        'copyright' => 'BEYOND'
+    ];
+
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
+        $cached = json_decode(file_get_contents($cacheFile), true);
+        $isFallback = is_array($cached)
+            && (($cached['title'] ?? '') === 'Kosmiczny krajobraz' || ($cached['title'] ?? '') === 'Zdjęcie dnia')
+            && (
+                stripos((string)($cached['explanation'] ?? ''), 'chwilowo nie odpowiada') !== false
+                || stripos((string)($cached['explanation'] ?? ''), 'Brak danych z NASA') !== false
+            );
+
+        if (is_array($cached) && !empty($cached['title']) && !$isFallback) {
+            return $cached;
+        }
+    }
+
+    $feedData = fetchApodFromScienceFeed();
+    if (is_array($feedData) && !isBrokenApodPayload($feedData)) {
+        if (!is_dir(CACHE_DIR)) {
+            @mkdir(CACHE_DIR, 0777, true);
+        }
+        @file_put_contents($cacheFile, json_encode($feedData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        return $feedData;
+    }
+
+    return $fallback;
+}

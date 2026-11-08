@@ -1,34 +1,34 @@
 [
     {
-        "icon": "\ud83d\udd2d",
+        "icon": "🔭",
         "name": "James Webb (JWST)",
-        "type": "Teleskop g\u0142\u0119bokiego kosmosu",
+        "type": "Teleskop głębokiego kosmosu",
         "badge": "badge-galaxy",
-        "distance": "1.5 mln km (L2)",
-        "notes": "Obserwacje w podczerwieni: galaktyki wczesnego Wszech\u015bwiata"
+        "distance": "1,5 mln km (punkt L2)",
+        "notes": "Obserwacje w podczerwieni: galaktyki wczesnego Wszechświata"
     },
     {
-        "icon": "\ud83e\ude90",
+        "icon": "🪐",
         "name": "TOI-6647 b",
-        "type": "Nowo odkryta egzoplaneta (NASA)",
+        "type": "Ostatnio odkryta egzoplaneta",
         "badge": "badge-exoplanet",
-        "distance": "174.4 lat \u015bw.",
+        "distance": "174.4 lat św.",
         "notes": "Odkrycie: 2026 r., metoda: Transit"
     },
     {
-        "icon": "\ud83d\udd73\ufe0f",
+        "icon": "🕳️",
         "name": "Sagittarius A* \/ M87*",
         "type": "Supermasywna czarna dziura",
         "badge": "badge-bh",
-        "distance": "26 000 \/ 53 mln lat \u015bw.",
-        "notes": "Cie\u0144 horyzontu zdarze\u0144 i relatywistyczny d\u017cet plazmy (EHT)"
+        "distance": "26 000 \/ 53 mln lat św.",
+        "notes": "Cień horyzontu zdarzeń uchwycony przez teleskop EHT"
     },
     {
-        "icon": "\ud83d\ude80",
-        "name": "Voyager 1 (Interstellar)",
-        "type": "Przestrze\u0144 mi\u0119dzygwiezdna",
+        "icon": "🚀",
+        "name": "Voyager 1 (przestrzeń międzygwiezdna)",
+        "type": "Sonda NASA",
         "badge": "badge-supernova",
         "distance": "25,94 mld km",
-        "notes": "Najdalszy obiekt cz\u0142owieka &bull; sygna\u0142 radiowy leci ~22h 38m"
+        "notes": "Najdalej od Ziemi obiekt stworzony przez człowieka &bull; sygnał radiowy: ~22h 38m"
     }
 ]
