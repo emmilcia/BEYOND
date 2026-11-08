@@ -13,7 +13,7 @@
             
             <div class="footer-info">
                 <p class="footer-credits">
-                    Projekt szkolny &bull; <?= date('Y') ?> &bull; <em>"Per aspera ad astra"</em>
+                    Made by Emilia Dudzik &bull; <?= date('Y') ?>
                 </p>
                 <p class="footer-source">
                     Dane i zdjęcia: NASA Open APIs &bull; ESA &bull; ESO
