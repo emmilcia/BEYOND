@@ -1,14 +1,9 @@
 <?php
-/**
- * BEYOND — Konfiguracja projektu
- * Prosty plik konfiguracyjny przechowujący podstawowe dane strony.
- */
-
-// Nazwa projektu
+// Nazwa i opis strony
 define('SITE_NAME', 'BEYOND');
 define('SITE_TAGLINE', 'Portal Astronomiczny & Eksploracja Kosmosu');
 
-// Pomocnicza funkcja do sprawdzania, czy dana podstrona jest aktywna (do zaznaczania w menu)
+// Sprawdza czy dany plik to aktywna podstrona (używane w menu nawigacyjnym)
 function isActive($pageName, $currentPage) {
     return ($pageName === $currentPage) ? 'active' : '';
 }

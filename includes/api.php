@@ -1,23 +1,18 @@
 <?php
-/**
- * BEYOND — Moduł integracji z oficjalnymi API NASA
- * Obsługa pobierania danych w czasie rzeczywistym z mechanizmem pamięci podręcznej (Cache)
- */
-
+// Folder na pliki cache (żeby nie odpytywać API przy każdym wejściu na stronę)
 define('CACHE_DIR', __DIR__ . '/../data');
-define('NASA_API_KEY', 'DEMO_KEY'); // Oficjalny klucz demonstracyjny NASA API
 
-/**
- * Pomocnicza funkcja wykonująca zapytanie HTTP z limitem czasu
- * Używa cURL dla najlepszej kompatybilności z HTTPS
- */
-function fetchHttp($url, $timeoutSeconds = 6) {
-    // Próbuj przez cURL (szybsze, lepsze HTTPS)
+// Klucz NASA API — DEMO_KEY działa bez rejestracji, limit: 30 req/h
+define('NASA_API_KEY', 'DEMO_KEY');
+
+// Wysyła żądanie HTTP i zwraca odpowiedź jako string (albo false jeśli błąd)
+// Używa cURL, z fallbackiem na file_get_contents
+function fetchHttp($url, $timeout = 6) {
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT        => $timeoutSeconds,
+            CURLOPT_TIMEOUT        => $timeout,
             CURLOPT_CONNECTTIMEOUT => 4,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_USERAGENT      => 'BEYOND-Astronomy-Portal/1.0',
@@ -28,177 +23,174 @@ function fetchHttp($url, $timeoutSeconds = 6) {
         return $result ?: false;
     }
 
-    // Fallback: file_get_contents
-    $context = stream_context_create([
-        'http' => [
-            'timeout' => $timeoutSeconds,
-            'header'  => "User-Agent: BEYOND-Astronomy-Portal/1.0\r\n"
-        ],
-        'ssl' => [
-            'verify_peer'      => false,
-            'verify_peer_name' => false
-        ]
+    // Zapasowy sposób pobierania gdy brak cURL
+    $ctx = stream_context_create([
+        'http' => ['timeout' => $timeout, 'header' => "User-Agent: BEYOND-Astronomy-Portal/1.0\r\n"],
+        'ssl'  => ['verify_peer' => false, 'verify_peer_name' => false],
     ]);
-    $result = @file_get_contents($url, false, $context);
-    return $result ?: false;
+    return @file_get_contents($url, false, $ctx) ?: false;
 }
 
-/**
- * Pobiera aktualne statystyki egzoplanet z NASA Exoplanet Archive (Caltech IPAC TAP API)
- */
+// Sprawdza czy plik cache jest aktualny (nie starszy niż $maxAge sekund)
+function cacheValid($file, $maxAge) {
+    return file_exists($file) && (time() - filemtime($file) < $maxAge);
+}
+
+// Pobiera statystyki egzoplanet z NASA Exoplanet Archive (Caltech IPAC TAP API)
+// Cache: 1 godzina — dane zmieniają się rzadko
 function getNasaExoplanetData() {
     $cacheFile = CACHE_DIR . '/cache_exoplanets.json';
-    $cacheLifetime = 3600; // 1 godzina cache
 
-    if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
+    // Jeśli cache jest świeży, zwróć zapisane dane
+    if (cacheValid($cacheFile, 3600)) {
         $cached = json_decode(file_get_contents($cacheFile), true);
         if ($cached && isset($cached['total'])) {
             return $cached;
         }
     }
 
-    // 1. Pobierz liczbę potwierdzonych planet
-    $totalUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' . urlencode('select count(pl_name) as total from ps where default_flag=1') . '&format=json';
-    $totalJson = fetchHttp($totalUrl, 4);
+    // Zapytanie 1: łączna liczba potwierdzonych planet
+    $urlTotal = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query='
+        . urlencode('select count(pl_name) as total from ps where default_flag=1')
+        . '&format=json';
 
-    // 2. Pobierz rozkład metod detekcji
-    $methodsUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' . urlencode('select discoverymethod, count(pl_name) as count from ps where default_flag=1 group by discoverymethod order by count desc') . '&format=json';
-    $methodsJson = fetchHttp($methodsUrl, 4);
+    // Zapytanie 2: podział według metody odkrycia
+    $urlMethods = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query='
+        . urlencode('select discoverymethod, count(pl_name) as count from ps where default_flag=1 group by discoverymethod order by count desc')
+        . '&format=json';
 
-    $total = 6464;
-    $methods = [
-        'Transit' => 74,
-        'Radial Velocity' => 19,
-        'Microlensing' => 5,
-        'Imaging' => 2
-    ];
+    // Wartości domyślne na wypadek gdyby API nie odpowiedziało
+    $total   = 5700;
+    $methods = ['Transit' => 74, 'Radial Velocity' => 19, 'Microlensing' => 5, 'Imaging' => 2];
 
-    if ($totalJson) {
-        $totalArr = json_decode($totalJson, true);
-        if (!empty($totalArr[0]['total'])) {
-            $total = (int)$totalArr[0]['total'];
+    $jsonTotal = fetchHttp($urlTotal);
+    if ($jsonTotal) {
+        $arr = json_decode($jsonTotal, true);
+        if (!empty($arr[0]['total'])) {
+            $total = (int) $arr[0]['total'];
         }
     }
 
-    if ($methodsJson) {
-        $methodsArr = json_decode($methodsJson, true);
-        if (is_array($methodsArr) && count($methodsArr) > 0) {
-            $rawCounts = [];
-            $sum = 0;
-            foreach ($methodsArr as $row) {
-                $rawCounts[$row['discoverymethod']] = (int)$row['count'];
-                $sum += (int)$row['count'];
+    $jsonMethods = fetchHttp($urlMethods);
+    if ($jsonMethods) {
+        $arr = json_decode($jsonMethods, true);
+        if (is_array($arr) && count($arr) > 0) {
+            $suma = 0;
+            $surowe = [];
+            foreach ($arr as $wiersz) {
+                $surowe[$wiersz['discoverymethod']] = (int) $wiersz['count'];
+                $suma += (int) $wiersz['count'];
             }
-            if ($sum > 0) {
-                $transit = isset($rawCounts['Transit']) ? round(($rawCounts['Transit'] / $sum) * 100) : 74;
-                $rv = isset($rawCounts['Radial Velocity']) ? round(($rawCounts['Radial Velocity'] / $sum) * 100) : 19;
-                $micro = isset($rawCounts['Microlensing']) ? round(($rawCounts['Microlensing'] / $sum) * 100) : 5;
-                $imaging = isset($rawCounts['Imaging']) ? round(($rawCounts['Imaging'] / $sum) * 100) : 2;
-
+            if ($suma > 0) {
                 $methods = [
-                    'Transit' => $transit,
-                    'Radial Velocity' => $rv,
-                    'Microlensing' => $micro,
-                    'Imaging' => $imaging
+                    'Transit'         => round(($surowe['Transit']          ?? 0) / $suma * 100),
+                    'Radial Velocity' => round(($surowe['Radial Velocity']  ?? 0) / $suma * 100),
+                    'Microlensing'    => round(($surowe['Microlensing']     ?? 0) / $suma * 100),
+                    'Imaging'         => round(($surowe['Imaging']          ?? 0) / $suma * 100),
                 ];
             }
         }
     }
 
     $data = [
-        'total' => $total,
+        'total'   => $total,
         'methods' => $methods,
-        'timestamp' => time(),
-        'source' => 'Na żywo: NASA Exoplanet Archive API'
+        'zrodlo'  => 'NASA Exoplanet Archive (Caltech IPAC TAP API)',
     ];
 
-    if (!is_dir(CACHE_DIR)) {
-        @mkdir(CACHE_DIR, 0777, true);
-    }
-    @file_put_contents($cacheFile, json_encode($data, JSON_PRETTY_PRINT));
+    // Zapisz do cache
+    if (!is_dir(CACHE_DIR)) @mkdir(CACHE_DIR, 0777, true);
+    @file_put_contents($cacheFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
     return $data;
 }
 
-/**
- * Pobiera dane obiektów głębokiego kosmosu i misji międzygwiezdnych (Połączenie Opcji 1 i 2)
- * Korzysta z NASA Exoplanet Archive API + telemetrii misji JPL
- */
+// Pobiera dane do panelu "Głęboki Kosmos" na głównym pulpicie
+// Cache: 30 minut
 function getDeepSpaceFeed() {
     $cacheFile = CACHE_DIR . '/cache_deep_space.json';
-    $cacheLifetime = 1800; // 30 minut cache
 
-    if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheLifetime)) {
+    if (cacheValid($cacheFile, 1800)) {
         $cached = json_decode(file_get_contents($cacheFile), true);
         if ($cached && is_array($cached)) {
-            // Zaktualizuj licznik kilometrów Voyagera w czasie rzeczywistym
-            $voyagerKm = 24410000000 + (time() - 1704067200) * 17;
-            $cached[3]['distance'] = number_format($voyagerKm / 1000000000, 2, ',', ' ') . ' mld km';
+            // Dystans Voyagera liczymy na bieżąco z fizyki (prędkość ~17 km/s)
+            // — nie trzymamy go w cache, żeby zawsze był aktualny co do sekundy
+            $cached[3]['distance'] = voyagerDystans();
             return $cached;
         }
     }
 
-    // 1. Pobierz z NASA TAP API najnowszą potwierdzoną egzoplanetę
-    // Filtrujemy od 2024 wzwyż i sortujemy po dacie aktualizacji wpisu (rowupdate desc)
-    $latestExoUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=' . urlencode('select top 1 pl_name, hostname, discoverymethod, disc_year, sy_dist from ps where default_flag=1 and disc_year >= 2024 order by rowupdate desc') . '&format=json';
-    $exoJson = fetchHttp($latestExoUrl, 6);
-    
-    $exoName = 'Kepler-762 b';
-    $exoDist = '1 898 lat św.';
-    $exoNotes = 'Metoda tranzytu, teleskop Kepler/TESS';
+    // Pobierz najnowszą odkrytą egzoplanetę (od 2024, sortuj po dacie aktualizacji wpisu)
+    $urlExo = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query='
+        . urlencode('select top 1 pl_name, hostname, discoverymethod, disc_year, sy_dist from ps where default_flag=1 and disc_year >= 2024 order by rowupdate desc')
+        . '&format=json';
 
-    if ($exoJson) {
-        $exoArr = json_decode($exoJson, true);
-        if (!empty($exoArr[0])) {
-            $exoName = $exoArr[0]['pl_name'];
-            $exoDist = round((float)$exoArr[0]['sy_dist'], 1) . ' lat św.';
-            $exoNotes = "Odkrycie: {$exoArr[0]['disc_year']} r., metoda: {$exoArr[0]['discoverymethod']}";
+    // Wartości domyślne gdyby API nie odpowiedziało w czasie
+    $exoNazwa = 'TOI-6647 b';
+    $exoDyst  = '—';
+    $exoOpis  = 'Odkrycie: 2026 r., metoda: Transit (TESS)';
+
+    $json = fetchHttp($urlExo);
+    if ($json) {
+        $arr = json_decode($json, true);
+        if (!empty($arr[0])) {
+            $exoNazwa = $arr[0]['pl_name'];
+            $exoDyst  = round((float) $arr[0]['sy_dist'], 1) . ' lat św.';
+            $exoOpis  = "Odkrycie: {$arr[0]['disc_year']} r., metoda: {$arr[0]['discoverymethod']}";
         }
     }
 
-    // Dynamiczny licznik dystansu sondy Voyager 1 (16.9995 km/s wg NASA JPL)
-    $voyagerKm = 24410000000 + (time() - 1704067200) * 17;
-    $voyagerDistFormatted = number_format($voyagerKm / 1000000000, 2, ',', ' ') . ' mld km';
-
     $feed = [
+        // Teleskop Webba — stały opis (NASA nie udostępnia API "co teraz obserwuje")
         [
-            'icon' => '🔭',
-            'name' => 'James Webb (JWST)',
-            'type' => 'Teleskop głębokiego kosmosu',
-            'badge' => 'badge-galaxy',
-            'distance' => '1.5 mln km (L2)',
-            'notes' => 'Obserwacje w podczerwieni: galaktyki wczesnego Wszechświata'
+            'icon'     => '🔭',
+            'name'     => 'James Webb (JWST)',
+            'type'     => 'Teleskop głębokiego kosmosu',
+            'badge'    => 'badge-galaxy',
+            'distance' => '1,5 mln km (punkt L2)',
+            'notes'    => 'Obserwacje w podczerwieni: galaktyki wczesnego Wszechświata',
         ],
+        // Najnowsza egzoplaneta — dane z NASA Exoplanet Archive API
         [
-            'icon' => '🪐',
-            'name' => $exoName,
-            'type' => 'Nowo odkryta egzoplaneta (NASA)',
-            'badge' => 'badge-exoplanet',
-            'distance' => $exoDist,
-            'notes' => $exoNotes
+            'icon'     => '🪐',
+            'name'     => $exoNazwa,
+            'type'     => 'Ostatnio odkryta egzoplaneta',
+            'badge'    => 'badge-exoplanet',
+            'distance' => $exoDyst,
+            'notes'    => $exoOpis,
         ],
+        // Czarne dziury — jedyne dwie sfotografowane przez ludzkość (EHT 2019 i 2022)
         [
-            'icon' => '🕳️',
-            'name' => 'Sagittarius A* / M87*',
-            'type' => 'Supermasywna czarna dziura',
-            'badge' => 'badge-bh',
+            'icon'     => '🕳️',
+            'name'     => 'Sagittarius A* / M87*',
+            'type'     => 'Supermasywna czarna dziura',
+            'badge'    => 'badge-bh',
             'distance' => '26 000 / 53 mln lat św.',
-            'notes' => 'Cień horyzontu zdarzeń i relatywistyczny dżet plazmy (EHT)'
+            'notes'    => 'Cień horyzontu zdarzeń uchwycony przez teleskop EHT',
         ],
+        // Voyager 1 — dystans obliczany na żywo ze wzoru (prędkość JPL NASA)
         [
-            'icon' => '🚀',
-            'name' => 'Voyager 1 (Interstellar)',
-            'type' => 'Przestrzeń międzygwiezdna',
-            'badge' => 'badge-supernova',
-            'distance' => $voyagerDistFormatted,
-            'notes' => 'Najdalszy obiekt człowieka &bull; sygnał radiowy leci ~22h 38m'
-        ]
+            'icon'     => '🚀',
+            'name'     => 'Voyager 1 (przestrzeń międzygwiezdna)',
+            'type'     => 'Sonda NASA',
+            'badge'    => 'badge-supernova',
+            'distance' => voyagerDystans(),
+            'notes'    => 'Najdalej od Ziemi obiekt stworzony przez człowieka &bull; sygnał radiowy: ~22h 38m',
+        ],
     ];
 
-    if (!is_dir(CACHE_DIR)) {
-        @mkdir(CACHE_DIR, 0777, true);
-    }
-    @file_put_contents($cacheFile, json_encode($feed, JSON_PRETTY_PRINT));
+    if (!is_dir(CACHE_DIR)) @mkdir(CACHE_DIR, 0777, true);
+    @file_put_contents($cacheFile, json_encode($feed, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
     return $feed;
+}
+
+// Oblicza aktualny dystans Voyagera 1 na podstawie prędkości z JPL NASA (~17 km/s)
+// Punkt startowy: 24,41 mld km w dniu 1 stycznia 2024
+function voyagerDystans() {
+    $kmNa1Styczen2024 = 24_410_000_000;
+    $predkoscKmS      = 17; // km/s wg NASA JPL
+    $sekundy          = time() - mktime(0, 0, 0, 1, 1, 2024);
+    $km               = $kmNa1Styczen2024 + $sekundy * $predkoscKmS;
+    return number_format($km / 1_000_000_000, 2, ',', ' ') . ' mld km';
 }

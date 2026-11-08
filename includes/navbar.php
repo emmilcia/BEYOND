@@ -1,5 +1,5 @@
 <?php
-// Pobieramy nazwę bieżącego pliku, aby wiedzieć który link w menu ma być podświetlony
+// Sprawdzamy nazwę bieżącego pliku, żeby podświetlić właściwy link w menu
 $currentScript = basename($_SERVER['PHP_SELF']);
 ?>
 <header class="navbar-wrapper">
@@ -10,45 +10,20 @@ $currentScript = basename($_SERVER['PHP_SELF']);
             <span class="logo-badge">COSMOS</span>
         </a>
 
-        <!-- Przycisk menu dla urządzeń mobilnych -->
-        <button class="nav-toggle" id="navToggle" aria-label="Przełącz menu">
+        <!-- Przycisk hamburgera — widoczny tylko na mobile -->
+        <button class="nav-toggle" id="navToggle" aria-label="Otwórz menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <!-- Lista odnośników do wszystkich podstron -->
         <ul class="nav-links" id="navLinks">
-            <li>
-                <a href="index.php" class="<?= isActive('index.php', $currentScript) ?>">
-                    Główna
-                </a>
-            </li>
-            <li>
-                <a href="uklad.php" class="<?= isActive('uklad.php', $currentScript) ?>">
-                    Układ Słoneczny
-                </a>
-            </li>
-            <li>
-                <a href="apod.php" class="<?= isActive('apod.php', $currentScript) ?>">
-                    Zdjęcie dnia (APOD)
-                </a>
-            </li>
-            <li>
-                <a href="odkrycia.php" class="<?= isActive('odkrycia.php', $currentScript) ?>">
-                    Odkrycia
-                </a>
-            </li>
-            <li>
-                <a href="ciekawostki.php" class="<?= isActive('ciekawostki.php', $currentScript) ?>">
-                    Ciekawostki
-                </a>
-            </li>
-            <li>
-                <a href="misje.php" class="<?= isActive('misje.php', $currentScript) ?>">
-                    Misje kosmiczne
-                </a>
-            </li>
+            <li><a href="index.php" class="<?= isActive('index.php', $currentScript) ?>">Główna</a></li>
+            <li><a href="uklad.php" class="<?= isActive('uklad.php', $currentScript) ?>">Układ Słoneczny</a></li>
+            <li><a href="apod.php" class="<?= isActive('apod.php', $currentScript) ?>">Zdjęcie dnia (APOD)</a></li>
+            <li><a href="odkrycia.php" class="<?= isActive('odkrycia.php', $currentScript) ?>">Odkrycia</a></li>
+            <li><a href="ciekawostki.php" class="<?= isActive('ciekawostki.php', $currentScript) ?>">Ciekawostki</a></li>
+            <li><a href="misje.php" class="<?= isActive('misje.php', $currentScript) ?>">Misje kosmiczne</a></li>
         </ul>
     </nav>
 </header>
