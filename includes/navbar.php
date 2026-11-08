@@ -21,7 +21,7 @@ $currentScript = basename($_SERVER['PHP_SELF']);
             <li><a href="index.php" class="<?= isActive('index.php', $currentScript) ?>">Główna</a></li>
             <li><a href="uklad.php" class="<?= isActive('uklad.php', $currentScript) ?>">Układ Słoneczny</a></li>
             <li><a href="apod.php" class="<?= isActive('apod.php', $currentScript) ?>">Zdjęcie dnia (APOD)</a></li>
-            <li><a href="odkrycia.php" class="<?= isActive('odkrycia.php', $currentScript) ?>">Odkrycia</a></li>
+            <li><a href="odkrycia.php" class="<?= isActive('odkrycia.php', $currentScript) ?>">Artykuły</a></li>
             <li><a href="ciekawostki.php" class="<?= isActive('ciekawostki.php', $currentScript) ?>">Ciekawostki</a></li>
             <li><a href="misje.php" class="<?= isActive('misje.php', $currentScript) ?>">Misje kosmiczne</a></li>
         </ul>

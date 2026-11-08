@@ -6,6 +6,5 @@
         "Microlensing": 5,
         "Imaging": 2
     },
-    "timestamp": 1794152679,
-    "source": "Na \u017cywo: NASA Exoplanet Archive API"
+    "zrodlo": "NASA Exoplanet Archive (Caltech IPAC TAP API)"
 }
