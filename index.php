@@ -32,11 +32,11 @@ $offset4 = ($offset3 - $pctMicro + 100) % 100;
         <!-- ================= GÓRNY RZĄD ================= -->
         <div class="dashboard-row-top">
 
-            <!-- Panel 1: Przegląd Galaktyki -->
+            <!-- Panel 1: Przegląd Drogi Mlecznej -->
             <div class="dash-card">
                 <div class="dash-card-header">
                     <span class="neon-dot blue"></span>
-                    <h2 class="dash-card-title">Przegląd Galaktyki</h2>
+                    <h2 class="dash-card-title">Przegląd Drogi Mlecznej</h2>
                 </div>
 
                 <div class="galaxy-view-box">
@@ -357,9 +357,6 @@ $offset4 = ($offset3 - $pctMicro + 100) % 100;
                     <span style="font-size: 0.75rem; color: var(--text-muted);">
                         Dane: NASA Exoplanet Science &bull; JPL Horizons Telemetry
                     </span>
-                    <a href="odkrycia.php" style="font-family: var(--font-ui); font-size: 0.84rem; font-weight: 600; color: var(--neon-cyan); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                        Wszystkie odkrycia &rarr;
-                    </a>
                 </div>
             </div>
 
